@@ -1,0 +1,3 @@
+".\Objects\main.obj" 
+TO ".\Objects\05独立按键控制状态" 
+PRINT(".\Listings\05独立按键控制状态.m51") RAMSIZE(256) 
