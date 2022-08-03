@@ -1,0 +1,59 @@
+C51 COMPILER V9.60.0.0   UART                                                              08/03/2022 15:17:27 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\Objects\UART.obj
+COMPILER INVOKED BY: D:\keil5\C51\BIN\C51.EXE UART.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\UART.l
+                    -st) OBJECT(.\Objects\UART.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          
+   3          /**
+   4            * @brief 串口初始化
+   5            * @param 无
+   6            * @retval 无
+   7            */
+   8          void UNIT_Init()
+   9          {
+  10   1              SCON=0x50;   //0100 0000 该寄存器控制（SM0 SM1 REN TB8 RB8 TI RI）
+  11   1              //SM0 SM1取01选择方式一，即8位UART波特率可变模式
+  12   1              //REN位是决定是否可以接收
+  13   1              //TB8 RB8是方式2，3不需配置
+  14   1              //TI RI为是否发送中断请求，发送时机器自动置1，需手动置0
+  15   1              PCON |= 0x80;           //设置波特率
+  16   1              TMOD &= 0x0F;           //设置定时器模式
+  17   1              TMOD |= 0x20;           //设置定时器模式
+  18   1              TL1 = 0xF4;             //设置定时初始值
+  19   1              TH1 = 0xF4;             //设置定时重载值
+  20   1              ET1=0;                  //禁止定时器1中断
+  21   1              TR1 = 1;                //定时器1开始计时
+  22   1              EA=1;
+  23   1              ES=1;
+  24   1      }
+  25          /**
+  26            * @brief 串口发送一个字节数据
+  27          * @param Byte为发送的数据
+  28            * @retval 无
+  29            */
+  30          void UART_sendbyte(unsigned char byte)
+  31          {
+  32   1              SBUF=byte;
+  33   1              while(TI==0);
+  34   1              TI=0;
+  35   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     35    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
