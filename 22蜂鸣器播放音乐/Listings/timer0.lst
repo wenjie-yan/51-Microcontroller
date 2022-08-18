@@ -1,0 +1,55 @@
+C51 COMPILER V9.60.0.0   TIMER0                                                            08/11/2022 19:00:01 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE TIMER0
+OBJECT MODULE PLACED IN .\Objects\timer0.obj
+COMPILER INVOKED BY: D:\keil5\C51\BIN\C51.EXE timer0.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\time
+                    -r0.lst) OBJECT(.\Objects\timer0.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          
+   3          void Timer_Init()
+   4          {
+   5   1              //TMOD=0x01;    //0000 0001  TMOD不可按位寻址  TCON可按位寻址
+   6   1              //配置TMOD  高四位为定时器1，低四位为定时器2（GATE C/T M1 M0）分别为（0 0 0 1）
+   7   1              //GATE 可以选择是由外部和内部一起控制还是只是由TR0控制 这里GATE直接给0由TR0�
+             -�制
+   8   1              //C/T 置0为选择定时器  置1为计数器
+   9   1              //M1 M0选择为0 1 为选择16位模式
+  10   1              TMOD=TMOD&0xF0;  //把TMOD低四位清零，高四位保持不变
+  11   1              TMOD=TMOD|0x01;  //把TMOD低四位置1，高四位保持不变
+  12   1              TF0=0;     //清零防止产生中断
+  13   1              TR0=1;     //配置定时器工作
+  14   1              TH0=64535/256;  //256=2^8  就是在二进制里小数点向左移动8位  拿出了高八位
+  15   1              TL0=64535%256; //这样操作之后就把整个数的高低位分开了
+  16   1              ET0=1;  //IE   T0的中断允许位
+  17   1              EA=1;   //IE   总中断允许位
+  18   1              PT0=0;  //IP   选择低级优先级
+  19   1      }
+  20          //void Timer0_Routine() interrupt 1
+  21          //{
+  22          //      static unsigned int T0Count;
+  23          //      TL0=0x18;
+  24          //      TH0=0xFC;
+  25          //      T0Count++;
+  26          //      if(T0Count>=1000)
+  27          //      {
+  28          //              T0Count=0;
+  29          //      }
+  30          //}
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     23    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
